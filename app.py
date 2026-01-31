@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+
 # --- Configuração da Página ---
 # Define o título da página, o ícone e o layout para ocupar a largura inteira.
 st.set_page_config(
@@ -8,10 +9,13 @@ st.set_page_config(
     page_icon="📊",
     layout="wide",
 )
+
 # --- Carregamento dos dados ---
 df = pd.read_csv("https://raw.githubusercontent.com/vqrca/dashboard_salarios_dados/refs/heads/main/dados-imersao-final.csv")
+
 # --- Barra Lateral (Filtros) ---
 st.sidebar.header("🔍 Filtros")
+
 # Filtro de Ano
 anos_disponiveis = sorted(df['ano'].unique())
 anos_selecionados = st.sidebar.multiselect("Ano", anos_disponiveis, default=anos_disponiveis)
@@ -36,9 +40,11 @@ df_filtrado = df[
     (df['contrato'].isin(contratos_selecionados)) &
     (df['tamanho_empresa'].isin(tamanhos_selecionados))
 ]
+
 # --- Conteúdo Principal ---
 st.title("🎲 Dashboard de Análise de Salários na Área de Dados")
 st.markdown("Explore os dados salariais na área de dados nos últimos anos. Utilize os filtros à esquerda para refinar sua análise.")
+
 # --- Métricas Principais (KPIs) ---
 st.subheader("Métricas gerais (Salário anual em USD)")
 
@@ -57,6 +63,7 @@ col3.metric("Total de registros", f"{total_registros:,}")
 col4.metric("Cargo mais frequente", cargo_mais_frequente)
 
 st.markdown("---")
+
 # --- Análises Visuais com Plotly ---
 st.subheader("Gráficos")
 
@@ -103,7 +110,7 @@ with col_graf3:
             names='tipo_trabalho',
             values='quantidade',
             title='Proporção dos tipos de trabalho',
-            hole=0.5
+            hole=0.5  
         )
         grafico_remoto.update_traces(textinfo='percent+label')
         grafico_remoto.update_layout(title_x=0.1)
@@ -124,7 +131,8 @@ with col_graf4:
         grafico_paises.update_layout(title_x=0.1)
         st.plotly_chart(grafico_paises, use_container_width=True)
     else:
-        st.warning("Nenhum dado para exibir no gráfico de países.")
+        st.warning("Nenhum dado para exibir no gráfico de países.") 
+
 # --- Tabela de Dados Detalhados ---
 st.subheader("Dados Detalhados")
 st.dataframe(df_filtrado)
